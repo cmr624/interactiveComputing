@@ -6,7 +6,7 @@ let paddleHeight;
 let paddlePosX;
 let paddlePosY;
 let paddleSpeedX;
-let paddleAccel = .1;
+let paddleAccel = 10;
 let ballPosX;
 let ballPosY;
 let ballSpeedX;
@@ -28,7 +28,7 @@ function preload()
   soundFormats("mp3", "wav");
   missSound = loadSound("miss.mp3");
   objSound = loadSound("objective.wav");
-  bounceSound = loadSound("bounce.wav");
+  bounceSound = loadSound("bouncy.wav");
 
 }
 function setup() {
@@ -76,13 +76,13 @@ function draw()
 
   // move left?
   if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-    // subtract from character's xSpeed
-    paddleSpeedX -= paddleAccel;
+    // subtract from character's xpos
+    paddlePosX -= paddleAccel;
   }
   // move right?
   if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
-    // add to character's xSpeed
-    paddleSpeedX += paddleAccel;
+    // add to character's pos
+    paddlePosX += paddleAccel;
   }
   paddlePosX += paddleSpeedX;
   ballPosX += ballSpeedX;
@@ -113,6 +113,7 @@ function draw()
     bounceSound.play();
     ballSpeedY *= -1;
   }
+
   // COLLISION DETECTION
   if (dist(ballPosX, ballPosY, xCoin, yCoin) < 50){
     objSound.play();
@@ -123,11 +124,13 @@ function draw()
     // give the user a point
     points += 1;
   }
+
   if ((ballPosY > height-10-68.4) && (ballPosX > paddlePosX-43.4 && ballPosX < paddlePosX + paddleLength))
   {
-      ballSpeedY *= -2;
-      ballSpeedX *= 2;
+      ballSpeedY *= -1.4;
+      ballSpeedX *= 1.4;
   }
+  
   if (ballPosY > height-28.4)
   {
     missSound.play();
