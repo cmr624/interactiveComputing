@@ -130,7 +130,7 @@ function draw()
       ballSpeedY *= -1.4;
       ballSpeedX *= 1.4;
   }
-  
+
   if (ballPosY > height-28.4)
   {
     missSound.play();

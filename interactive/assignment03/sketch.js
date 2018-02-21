@@ -1,6 +1,9 @@
 //playerSprite
 let pharahSprite;
 
+//crosshair
+let crosshairSprite;
+
 //player
 let pharah;
 
@@ -22,6 +25,7 @@ function preload()
 {
   pharahSprite = loadImage("images/pharahSprite_small.png");
   bg = loadImage("images/bg.png");
+  crosshairSprite = loadImage("images/crosshair.png");
 
   //enemies, potentially variable with more effort lol
   enemy1sprite = loadImage("images/enemy1.png");
@@ -38,20 +42,29 @@ function setup()
   enemy2 = new BadBoi(400, height-238-enemy2sprite.height, enemy2sprite, .01);
   enemy3 = new BadBoi(150, height-238-enemy3sprite.height, enemy3sprite, .02);
   enemyArr = [enemy1, enemy2, enemy3];
+  noCursor();
 }
 
 function draw()
 {
-  background(bg);
-  pharah.display();
+  //background(bg);
+  background(255);
+  //pharah.display();
   pharah.move();
-  for (let i = 0; i < enemyArr.length; i++)
+  //pharah.shoot();
+  //spawn 3 enemies
+  //spawnEnemies(enemyArr, 3);
+  pharah.aim();
+}
+
+function spawnEnemies(enemyArr, num)
+{
+  for (let i = 0; i < num; i++)
   {
     enemyArr[i].display();
     enemyArr[i].move();
   }
 }
-
 class Pharah
 {
   constructor()
@@ -59,9 +72,39 @@ class Pharah
     this.xPos = 250;
     this.yPos = 250;
     this.sprite = pharahSprite;
+    this.crosshair = crosshairSprite;
     this.accel = 0.1;
     this.xSpeed = 0;
     this.ySpeed = 0;
+    this.gravity = 0.03;
+    this.collided = false;
+    this.xLimit = 5;
+    this.aimX = mouseX;
+    this.aimY = mouseY;
+    this.bulletX = this.sprite.width + (this.sprite.width / 2);
+    this.bulletY = this.sprite.height + (this.sprite.height / 2);
+    this.bulletSpeed = .02;
+  }
+  aim()
+  {
+    this.aimX = mouseX - (this.sprite.width / 2 - 33);
+    this.aimY = mouseY - ((this.sprite.height / 2) + 10);
+    image(this.crosshair, this.aimX, this.aimY);
+    if (mousePressed)
+    {
+      this.shoot(this.aimX, this.aimY);
+    }
+  }
+  shoot(x, y)
+  {
+      console.log("pew");
+      let xDest = x;
+      let yDest = y;
+      let xDist = xDest - this.bulletX;
+      let yDist = yDest - this.bulletY;
+      this.bulletX += this.bulletSpeed * xDist;
+      this.bulletY += this.bulletSpeed * yDist;
+      ellipse(this.bulletX, this.bulletY, 80, 80);
   }
   display()
   {
@@ -70,6 +113,35 @@ class Pharah
   // this will move our character
   move()
   {
+    // wrap around logic
+
+    if (this.xPos + this.sprite.width > width)
+    {
+      this.xSpeed = 0;
+      this.collided = true;
+      this.xPos = width - this.sprite.width
+    }
+    if (this.xPos < 0)
+    {
+      this.xSpeed = 0;
+      this.collided = true;
+      this.xPos = 0;
+    }
+    if (this.yPos > height-238-this.sprite.height)
+    {
+      this.ySpeed = 0;
+      this.collided = true;
+      this.yPos = height-238 - this.sprite.height;
+    }
+    if (this.yPos < 0)
+    {
+      this.ySpeed = 0;
+      this.collided = true;
+      this.yPos = 0;
+    }
+    this.collided = false;
+
+
     // move left?
     if (keyIsDown(LEFT_ARROW) || keyIsDown(65))
     {
@@ -93,26 +165,16 @@ class Pharah
       // add to character's ySpeed
       this.ySpeed += this.accel;
     }
+
+
+
+    this.ySpeed += this.gravity;
     this.xPos += this.xSpeed;
     this.yPos += this.ySpeed;
 
     // speed limit!  prevent the user from moving too fast
-    this.xSpeed = constrain(this.xSpeed, -5, 5);
-    this.ySpeed = constrain(this.ySpeed, -5, 5);
-
-    // wrap around logic
-    if (this.xPos + this.sprite.width > width) {
-      this.xPos = 0;
-    }
-    if (this.xPos < 0) {
-      this.xPos = width - this.sprite.width;
-    }
-    if (this.yPos > height) {
-      this.yPos = 0;
-    }
-    if (this.yPos + this.sprite.height < 0) {
-      this.yPos = height - this.sprite.height;
-    }
+    this.xSpeed = constrain(this.xSpeed, -this.xLimit, this.xLimit);
+    this.ySpeed = constrain(this.ySpeed, -25, 25);
   }
 }
 
