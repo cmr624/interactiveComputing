@@ -8,5 +8,34 @@
     <style> body {padding: 0; margin: 0;} </style>
   </head>
   <body>
+    <h1>ON SOME BROWSERS - YOU MUST ZOOM OUT TO SEE FULL CANVAS! (CTRL - (MINUS))</h1>
+    <h2>ASSIGNMENT 03 Requirements</h2>
+    <p>This game is essentially the 2D gameplay of the character from the first person shooter, Overwatch. "PHarah" is a character with a jetpack, and shoots rockets. I implemented a basic jetpack flying system, with gravity and acceleration. I also implemented the fuel meter, which can go below zero and leave the player stranded without fuel to be hit by the enemies.</p>
+    <ol>
+      <li>Theme - Pharah, Overwatch</li>
+      <li>User controlled character - A / D, spacebar for fuel, R for reload</li>
+      <li>Objective - shoot all enemies</li>
+      <li>Obstacle - enemies on the ground</li>
+      <li>Scoring system - counts how many enemies shot, top left corner</li>
+      <li>HTML Interface - below</li>
+      <li>Start Screen / Game Screen / Gameover Screen</li>
+      <li>Sound file - every shot (click) plays a sound.</li>
+      <li>External graphics - Assets of Overwatch, Destiny, Google Images</li>
+    </ol>
+    <h3>IN CLASS - GROUPMATES: NICOLE WANG & HYOBIN IM</h3>
+    <p>For our project, we implemented a basic right / left controller for Nicole's game, which had two primary controls. It felt more intuitive to have a simple left / right scheme for her game, as it was themed to "catch" characters in a pool and you play a lifeguard. The simplistic control scheme worked well with the makey kit.
+    <ul>
+      <li> <a href="images/makey/0.jpg">Makey #0</a></li>
+      <li> <a href="images/makey/1.jpg">Makey High Five</a></li>
+      <li> <a href="images/makey/2.jpg">Makey Pac Man</a></li>
+      <li> <a href="images/makey/3.jpg">Makey Piano Man</a></li>
+      <li> <a href="images/makey/project.jpg">Makey - Project</a> - Here we implemented a left / right controller for Nicole's game.</li>
+    </ul>
+    <h4>HTML INTERFACE</h4>
+    <p>Before picking a difficulty, adjust the amount of fuel you want as a LIMIT. Range from 0-1500 fuel.</p>
+    <form>
+      <input type="range" id="range1" min="0" max="1500" step="1" value="1000" oninput="updateRange(this);" onchange="updateRange(this);">
+    </form>
+    <h1>PHARAH: 2D</h1>
   </body>
 </html>
