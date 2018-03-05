@@ -6,6 +6,9 @@ let donkey;
 let state;
 let cursorImg;
 
+let missSound;
+let goodSound;
+
 let cursor;
 //scoreboard
 let scoreboard;
@@ -21,6 +24,10 @@ function preload()
   golden = loadImage("images/goldenApril.png");
   donkey = loadImage("images/donkey.png");
   cursorImg = loadImage('images/cursor.png');
+
+  soundFormats("mp3", "wav");
+  missSound = loadSound("sounds/miss.mp3");
+  goodSound = loadSound("sounds/objective.wav");
 }
 function setup()
 {
@@ -28,7 +35,7 @@ function setup()
   state = 0;
   hits = 0;
   misses = 0;
-  timer = 30;
+  timer = 60;
   createCanvas(500,500);
   const rowNum = 3;
   const colNum = 3;
@@ -41,6 +48,14 @@ function setup()
   }
   scoreboard = new Scoreboard();
   cursor = new Cursor();
+}
+function gameOver()
+{
+  background(255);
+  text("Thanks for playing.", 50, 50);
+  text("Your score was: " + hits, 50, 100);
+  text("You missed " + misses + " times.", 50, 150);
+  text("-CM", 50, 200);
 }
 
 function draw()
@@ -63,7 +78,27 @@ function draw()
 function menu()
 {
   background(255);
-  text("hey", 50, 50);
+  text("Welcome.", 50, 50);
+  text("Click all pictures of April... but be careful for Cuddles!", 50, 100);
+  text("Choose Difficulty", 50, 150);
+  text("Type (1) - Easy (45 seconds)", 50, 200);
+  text("Type (2) - Medium (30 seconds)", 50, 250);
+  text("Type (3) - Hard (15 seconds)", 50, 300);
+  if (keyIsDown(49))
+  {
+    timer = 45;
+    state = 1;
+  }
+  else if (keyIsDown(50))
+  {
+    timer = 30;
+    state = 1;
+  }
+  else if (keyIsDown(51))
+  {
+    timer = 15;
+    state = 1;
+  }
 }
 //adapted from: http://alpha.editor.p5js.org/marynotari/sketches/S1T2ZTMp-
 //mainly because millis() caused me *actual* nightmares
@@ -95,11 +130,6 @@ function game()
     moles[i].update();
   }
   cursor.display();
-}
-function gameOver()
-{
-  background(255);
-  text("bye", 50, 50);
 }
 class Scoreboard
 {
@@ -201,6 +231,7 @@ class Mole
     {
       if (this.visible)
       {
+        goodSound.play();
         if (this.isGolden)
         {
           hits += 10;
@@ -217,6 +248,7 @@ class Mole
       }
       else
       {
+        missSound.play();
         misses += 1;
       }
     }
