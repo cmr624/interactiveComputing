@@ -1,5 +1,7 @@
-
+//moles arr
 const moles = [];
+
+//image
 let april;
 let golden;
 let donkey;
@@ -10,7 +12,8 @@ let missSound;
 let goodSound;
 
 let cursor;
-//scoreboard
+
+//scoreboard vars
 let scoreboard;
 let hits;
 let misses;
@@ -18,6 +21,7 @@ let timer;
 
 let clicked;
 
+//load assets
 function preload()
 {
   april = loadImage("images/aprilcircle.png");
@@ -29,6 +33,8 @@ function preload()
   missSound = loadSound("sounds/miss.mp3");
   goodSound = loadSound("sounds/objective.wav");
 }
+
+//instantiate everything
 function setup()
 {
   clicked = false;
@@ -39,6 +45,8 @@ function setup()
   createCanvas(500,500);
   const rowNum = 3;
   const colNum = 3;
+
+  //create all these MOLES!!!!
   for (let i = 0; i < rowNum; i++)
   {
     for (let x = 0; x < colNum; x++)
@@ -49,6 +57,8 @@ function setup()
   scoreboard = new Scoreboard();
   cursor = new Cursor();
 }
+
+//gameover function, print some stuff for the user
 function gameOver()
 {
   background(255);
@@ -57,24 +67,28 @@ function gameOver()
   text("You missed " + misses + " times.", 50, 150);
   text("-CM", 50, 200);
 }
-
+//draw function - check state and do the proper functino
 function draw()
 {
   checkTimer();
   if (state === 0)
   {
+    //first menu
     menu();
   }
   else if (state === 1)
   {
+    //main()
     game();
   }
   else if (state === 2)
   {
+    //print hits/misses etc.
     gameOver();
   }
 }
 
+//basic menu system
 function menu()
 {
   background(255);
@@ -114,16 +128,20 @@ function checkTimer()
   }
 }
 
+//just set a global variable to true if clicked.
+//is there an easier way to do this?
 function mouseClicked()
 {
   clicked = true;
 }
 
+//main function
 function game()
 {
   background(0);
   //console.log("millis" + millis());
   scoreboard.display();
+  //go through every mole and display it and update it
   for (let i = 0; i < moles.length; i++)
   {
     moles[i].display();
@@ -131,6 +149,8 @@ function game()
   }
   cursor.display();
 }
+
+//UI class
 class Scoreboard
 {
   constructor()
@@ -148,6 +168,7 @@ class Scoreboard
   }
 }
 
+//dog bone logic
 class Cursor
 {
   constructor()
@@ -160,8 +181,11 @@ class Cursor
     image(this.sprite, mouseX, mouseY);
   }
 }
+//mole class. meat of this program!!
 class Mole
 {
+  //use x, y to create a mole in a different place
+  //x, y the only thing that changes between each mole
   constructor(x, y)
   {
     this.xPos = x;
@@ -172,8 +196,10 @@ class Mole
     this.april = april;
     this.lowerBound = 0;
     this.upperBound = 10;
+    //number is the timer number
     this.number = random(this.lowerBound, this.upperBound);
     this.random = Math.floor(random(this.lowerBound, this.upperBound));
+    //extra credit
     this.isGolden = false;
     this.isDonkey = false;
     this.golden = golden;
@@ -195,11 +221,13 @@ class Mole
       }
       else
       {
+        //regular april
         image(this.april, this.xPos - this.april.width/2, this.yPos - this.april.height / 2);
       }
     }
     else
     {
+      //empty
       fill(255);
       ellipse(this.xPos, this.yPos, this.r, this.r);
       fill(0);
@@ -215,6 +243,7 @@ class Mole
     }
     if (this.number <= 0)
     {
+      //extra credit
       if (this.random === 3)
       {
         this.isGolden = true;
@@ -226,7 +255,7 @@ class Mole
       this.flip();
       this.number = random(this.lowerBound, this.upperBound);
     }
-
+    //check if we have a hti and update points
     if (this.checkHit())
     {
       if (this.visible)
@@ -253,6 +282,7 @@ class Mole
       }
     }
   }
+  //regular flip, switch visible bool
   flip()
   {
     if (this.visible)
@@ -266,7 +296,7 @@ class Mole
       this.visible = true;
     }
   }
-
+  //adapted from kapp notes, but it checks with mouseX and mouseY
   checkHit()
   {
     let distanceCheck =(dist(this.xPos, this.yPos, mouseX, mouseY) < this.r);
